@@ -34,6 +34,24 @@ public class AllBlocks {
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(bettergold.MODID);
 
+    /** 金门/金活板门专用 BlockSetType：纯软金属，可手动打开（无需红石） */
+    public static final BlockSetType GOLD_SET_TYPE = BlockSetType.register(new BlockSetType(
+            "bettergold:gold",
+            true,  // canOpenByHand
+            false, // canOpenByWindCharge
+            false, // canButtonActivate
+            BlockSetType.PressurePlateSensitivity.EVERYTHING,
+            net.minecraft.world.level.block.SoundType.METAL,
+            net.minecraft.sounds.SoundEvents.IRON_DOOR_CLOSE,
+            net.minecraft.sounds.SoundEvents.IRON_DOOR_OPEN,
+            net.minecraft.sounds.SoundEvents.IRON_TRAPDOOR_CLOSE,
+            net.minecraft.sounds.SoundEvents.IRON_TRAPDOOR_OPEN,
+            net.minecraft.sounds.SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF,
+            net.minecraft.sounds.SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+            net.minecraft.sounds.SoundEvents.STONE_BUTTON_CLICK_OFF,
+            net.minecraft.sounds.SoundEvents.STONE_BUTTON_CLICK_ON
+    ));
+
     // ==================== 金系方块（铁镐） ====================
 
     /** 金砖块：属性完全复制原版金块，铁镐，信标基座 */
@@ -49,18 +67,18 @@ public class AllBlocks {
                     .sound(net.minecraft.world.level.block.SoundType.METAL)
                     .noOcclusion()));
 
-    /** 金门：继承 DoorBlock，铁门方块状态，红石控制 */
+    /** 金门：继承 DoorBlock，纯软金属可手动打开（也支持红石） */
     public static final DeferredBlock<DoorBlock> GOLD_DOOR = BLOCKS.register("gold_door",
-            () -> new DoorBlock(BlockSetType.IRON, BlockBehaviour.Properties.of()
+            () -> new DoorBlock(GOLD_SET_TYPE, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.GOLD)
                     .requiresCorrectToolForDrops()
                     .strength(5.0F, 6.0F)
                     .sound(net.minecraft.world.level.block.SoundType.METAL)
                     .noOcclusion()));
 
-    /** 金活板门：继承 TrapDoorBlock，铁活板门方块状态，红石控制 */
+    /** 金活板门：继承 TrapDoorBlock，纯软金属可手动打开（也支持红石） */
     public static final DeferredBlock<TrapDoorBlock> GOLD_TRAPDOOR = BLOCKS.register("gold_trapdoor",
-            () -> new TrapDoorBlock(BlockSetType.IRON, BlockBehaviour.Properties.of()
+            () -> new TrapDoorBlock(GOLD_SET_TYPE, BlockBehaviour.Properties.of()
                     .mapColor(MapColor.GOLD)
                     .requiresCorrectToolForDrops()
                     .strength(5.0F, 6.0F)

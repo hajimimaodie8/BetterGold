@@ -5,8 +5,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.ZombifiedPiglin;
-import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -15,81 +13,40 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 模组业务事件处理器。
  *
- * 1. 手持万坚金工具攻击生物 → 概率掉落金系物品（校验手持物品）。
- * 2. 全套万坚金盔甲（4 件齐全）：
- *    - 猪灵中立：猪灵不会主动攻击玩家；
- *    - 猪灵以物易物产出物品数量翻倍。
+ * 1. 手持万坚金工具攻击生物 → 100% 触发掉落金系物品（附魔金苹果仅 1% 权重）。
+ * 2. 万坚金盔甲（任意一件）：
+ *    - 猪灵中立由 AllItems.SturdygoldArmorItem 覆写 makesPiglinsNeutral 实现（单件生效），无需事件；
+ *    - 猪灵以物易物产出物品数量翻倍（任意一件盔甲即可）。
  * 3. 金钱贝战利品掉落：猪灵蛮兵 50% / 猪灵 15% / 僵尸猪灵 5%。
+ * 4. 猪灵以物易物时 6% 概率额外掉落金钱贝。
  *
  * 注意：1.21.1 的 NeoForge 没有 LivingHurtEvent（已拆分为 LivingIncomingDamageEvent / LivingDamageEvent），
  * 也没有 PiglinBarterEvent，因此用等价事件实现。
  */
 public class ModEvents {
 
-    /** 全套万坚金盔甲生效中的玩家集合（由玩家 Tick 事件维护，供猪灵中立/交易翻倍使用） */
-    private static final Set<UUID> FULL_SET_PLAYERS = ConcurrentHashMap.newKeySet();
+    /** 附魔金苹果的掉落权重：1% */
+    private static final double ENCHANTED_GOLDEN_APPLE_WEIGHT = 0.01;
 
-    /** 万坚金工具攻击时掉落金系物品的概率（0.0~1.0） */
-    private static final float TOOL_DROP_CHANCE = 0.15F;
-
-    /** 手持万坚金工具攻击可掉落的金系物品池 */
+    /** 手持万坚金工具攻击可掉落的金系物品池（附魔金苹果单独按 1% 权重判定） */
     private static final List<Item> GOLD_LOOT_POOL = List.of(
             Items.RAW_GOLD,          // 粗金
             Items.GOLD_NUGGET,       // 金粒
             Items.GOLD_INGOT,        // 金锭
             Items.GOLDEN_APPLE,      // 金苹果
             Items.GOLDEN_CARROT,     // 金萝卜
-            AllItems.GOLDEN_COWRIE.get(), // 金钱贝
-            Items.ENCHANTED_GOLDEN_APPLE // 附魔金苹果
+            AllItems.GOLDEN_COWRIE.get() // 金钱贝
     );
 
-    // ==================== 玩家 Tick：维护全套盔甲状态 ====================
-
-    @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Post event) {
-        Player player = event.getEntity();
-        if (player.level().isClientSide) {
-            return;
-        }
-        // 每 20 tick（约 1 秒）检测一次全套盔甲状态
-        if (player.tickCount % 20 == 0) {
-            if (hasFullSturdygoldArmor(player)) {
-                FULL_SET_PLAYERS.add(player.getUUID());
-            } else {
-                FULL_SET_PLAYERS.remove(player.getUUID());
-            }
-        }
-    }
-
-    // ==================== 猪灵中立（全套盔甲生效） ====================
-
-    @SubscribeEvent
-    public static void onLivingChangeTarget(LivingChangeTargetEvent event) {
-        // 只有猪灵/猪灵蛮兵考虑
-        if (!(event.getEntity() instanceof AbstractPiglin)) {
-            return;
-        }
-        LivingEntity newTarget = event.getNewAboutToBeSetTarget();
-        if (newTarget instanceof Player player && FULL_SET_PLAYERS.contains(player.getUUID())) {
-            // 猪灵不会主动攻击穿全套万坚金盔甲的玩家
-            event.setNewAboutToBeSetTarget(null);
-        }
-    }
-
-    // ==================== 猪灵以物易物产出翻倍（全套盔甲生效） ====================
+    // ==================== 猪灵以物易物：产出翻倍 + 6% 金钱贝 ====================
 
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
@@ -105,17 +62,25 @@ public class ModEvents {
         if (!(owner instanceof Piglin)) {
             return;
         }
-        // 若任意全套盔甲玩家在场，则产出数量翻倍
-        boolean anyFullSetPlayer = level.players().stream()
-                .anyMatch(p -> FULL_SET_PLAYERS.contains(p.getUUID()));
-        if (anyFullSetPlayer) {
+        // 任意万坚金盔甲玩家在场时：产出翻倍
+        boolean anyArmorPlayer = level.players().stream()
+                .anyMatch(ModEvents::wearingAnySturdygoldArmor);
+        if (anyArmorPlayer) {
             ItemStack stack = itemEntity.getItem();
             stack.grow(stack.getCount());
             itemEntity.setItem(stack);
         }
+        // 6% 概率额外掉落金钱贝（猪灵交易获得）
+        if (level.random.nextFloat() < 0.06F) {
+            ItemEntity cowrie = new ItemEntity(level,
+                    itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(),
+                    new ItemStack(AllItems.GOLDEN_COWRIE.get()));
+            cowrie.setDefaultPickUpDelay();
+            level.addFreshEntity(cowrie);
+        }
     }
 
-    // ==================== 万坚金工具攻击掉落金系物品 ====================
+    // ==================== 万坚金工具攻击：100% 触发掉落金系物品 ====================
 
     @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
@@ -132,18 +97,16 @@ public class ModEvents {
         if (!isSturdygoldTool(held)) {
             return;
         }
-        // 概率掉落
-        if (player.getRandom().nextFloat() < TOOL_DROP_CHANCE) {
-            Item loot = GOLD_LOOT_POOL.get(player.getRandom().nextInt(GOLD_LOOT_POOL.size()));
-            LivingEntity victim = event.getEntity();
-            Level level = victim.level();
-            if (level instanceof ServerLevel serverLevel) {
-                ItemEntity drop = new ItemEntity(serverLevel,
-                        victim.getX(), victim.getY() + 0.5D, victim.getZ(),
-                        new ItemStack(loot));
-                drop.setDefaultPickUpDelay();
-                serverLevel.addFreshEntity(drop);
-            }
+        // 功能 100% 触发：必定掉落一件金系物品
+        Item loot = rollGoldLoot(player);
+        LivingEntity victim = event.getEntity();
+        Level level = victim.level();
+        if (level instanceof ServerLevel serverLevel) {
+            ItemEntity drop = new ItemEntity(serverLevel,
+                    victim.getX(), victim.getY() + 0.5D, victim.getZ(),
+                    new ItemStack(loot));
+            drop.setDefaultPickUpDelay();
+            serverLevel.addFreshEntity(drop);
         }
     }
 
@@ -175,16 +138,21 @@ public class ModEvents {
 
     // ==================== 工具方法 ====================
 
-    /** 校验玩家是否穿戴完整 4 件万坚金盔甲（少一件都不算） */
-    public static boolean hasFullSturdygoldArmor(Player player) {
-        ItemStack helmet = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD);
-        ItemStack chestplate = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
-        ItemStack leggings = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.LEGS);
-        ItemStack boots = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET);
-        return helmet.is(AllItems.STURDYGOLD_HELMET.get())
-                && chestplate.is(AllItems.STURDYGOLD_CHESTPLATE.get())
-                && leggings.is(AllItems.STURDYGOLD_LEGGINGS.get())
-                && boots.is(AllItems.STURDYGOLD_BOOTS.get());
+    /** 按权重掷出金系掉落：附魔金苹果 1%，其余均分 99% */
+    private static Item rollGoldLoot(Player player) {
+        var random = player.getRandom();
+        if (random.nextDouble() < ENCHANTED_GOLDEN_APPLE_WEIGHT) {
+            return Items.ENCHANTED_GOLDEN_APPLE;
+        }
+        return GOLD_LOOT_POOL.get(random.nextInt(GOLD_LOOT_POOL.size()));
+    }
+
+    /** 玩家是否穿戴任意一件万坚金盔甲（单件即可，无需全套） */
+    public static boolean wearingAnySturdygoldArmor(Player player) {
+        return player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(AllItems.STURDYGOLD_HELMET.get())
+                || player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).is(AllItems.STURDYGOLD_CHESTPLATE.get())
+                || player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.LEGS).is(AllItems.STURDYGOLD_LEGGINGS.get())
+                || player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET).is(AllItems.STURDYGOLD_BOOTS.get());
     }
 
     /** 校验物品是否为万坚金工具 */
