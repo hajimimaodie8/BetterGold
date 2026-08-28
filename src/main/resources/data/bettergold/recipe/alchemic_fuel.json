@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:glass_bottle" },
+    { "item": "minecraft:magma_cream" },
+    { "item": "minecraft:magma_cream" },
+    { "item": "minecraft:magma_cream" },
+    { "item": "minecraft:magma_cream" },
+    { "item": "minecraft:blaze_powder" },
+    { "item": "minecraft:blaze_powder" },
+    { "item": "minecraft:blaze_powder" },
+    { "item": "minecraft:blaze_powder" }
+  ],
+  "result": { "id": "bettergold:alchemic_fuel" }
+}

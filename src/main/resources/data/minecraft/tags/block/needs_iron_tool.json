@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "bettergold:gold_bricks",
+    "bettergold:gold_bricks_stairs",
+    "bettergold:gold_bricks_slab",
+    "bettergold:gold_bricks_wall",
+    "bettergold:gold_bars",
+    "bettergold:gold_door",
+    "bettergold:gold_trapdoor"
+  ]
+}

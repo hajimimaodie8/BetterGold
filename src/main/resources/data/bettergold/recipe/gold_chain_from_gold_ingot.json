@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "N",
+    "I",
+    "N"
+  ],
+  "key": {
+    "N": { "item": "minecraft:gold_nugget" },
+    "I": { "item": "minecraft:gold_ingot" }
+  },
+  "result": {
+    "id": "bettergold:gold_chain",
+    "count": 1
+  }
+}

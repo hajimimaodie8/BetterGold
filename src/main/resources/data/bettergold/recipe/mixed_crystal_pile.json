@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:diamond" },
+    { "item": "minecraft:quartz" },
+    { "item": "minecraft:amethyst_shard" }
+  ],
+  "result": { "id": "bettergold:mixed_crystal_pile" }
+}

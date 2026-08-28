@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": { "item": "bettergold:sturdygold_ingot" }
+  },
+  "result": {
+    "id": "bettergold:sturdygold_bars",
+    "count": 16
+  }
+}

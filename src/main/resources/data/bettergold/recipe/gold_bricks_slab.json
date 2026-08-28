@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB"
+  ],
+  "key": { "B": { "item": "bettergold:gold_bricks" } },
+  "result": { "id": "bettergold:gold_bricks_slab", "count": 6 }
+}

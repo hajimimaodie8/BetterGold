@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": { "item": "bettergold:sturdygold_upgrade_template" },
+  "base": { "item": "minecraft:golden_axe" },
+  "addition": { "item": "bettergold:sturdygold_ingot" },
+  "result": { "id": "bettergold:sturdygold_axe", "count": 1 }
+}

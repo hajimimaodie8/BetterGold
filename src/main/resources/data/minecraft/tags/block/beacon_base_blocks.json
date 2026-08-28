@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "bettergold:gold_bricks",
+    "bettergold:sturdygold_block",
+    "bettergold:sturdygold_bricks"
+  ]
+}

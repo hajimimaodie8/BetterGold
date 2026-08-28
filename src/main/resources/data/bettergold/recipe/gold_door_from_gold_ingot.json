@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GG",
+    "GG",
+    "GG"
+  ],
+  "key": {
+    "G": { "item": "minecraft:gold_ingot" }
+  },
+  "result": {
+    "id": "bettergold:gold_door",
+    "count": 3
+  }
+}

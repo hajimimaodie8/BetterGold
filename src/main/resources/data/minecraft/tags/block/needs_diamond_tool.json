@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "bettergold:sturdygold_block",
+    "bettergold:sturdygold_bricks",
+    "bettergold:sturdygold_bricks_stairs",
+    "bettergold:sturdygold_bricks_slab",
+    "bettergold:sturdygold_bricks_wall",
+    "bettergold:sturdygold_bars",
+    "bettergold:sturdygold_door",
+    "bettergold:sturdygold_trapdoor",
+    "bettergold:sturdygold_lantern",
+    "bettergold:sturdygold_chain"
+  ]
+}

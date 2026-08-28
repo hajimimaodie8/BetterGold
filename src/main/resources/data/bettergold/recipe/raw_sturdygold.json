@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "bettergold:mixed_crystal_pile" },
+    { "item": "bettergold:mixed_crystal_pile" },
+    { "item": "minecraft:redstone" },
+    { "item": "minecraft:redstone" },
+    { "item": "minecraft:gold_block" },
+    { "item": "minecraft:gold_block" },
+    { "item": "minecraft:netherite_ingot" },
+    { "item": "bettergold:alchemic_fuel" },
+    { "item": "bettergold:golden_cowrie" }
+  ],
+  "result": { "id": "bettergold:raw_sturdygold" }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GIG",
+    "GTG",
+    "GCG"
+  ],
+  "key": {
+    "G": { "item": "minecraft:gold_block" },
+    "I": { "item": "bettergold:sturdygold_ingot" },
+    "T": { "item": "minecraft:netherite_upgrade_smithing_template" },
+    "C": { "item": "bettergold:golden_cowrie" }
+  },
+  "result": { "id": "bettergold:sturdygold_upgrade_template" }
+}
