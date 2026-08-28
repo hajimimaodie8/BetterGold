@@ -27,6 +27,9 @@ public class AllItems {
     /** 万坚金锭 */
     public static final DeferredItem<Item> STURDYGOLD_INGOT = ITEMS.registerSimpleItem("sturdygold_ingot");
 
+    /** 万坚金粒 */
+    public static final DeferredItem<Item> STURDYGOLD_NUGGET = ITEMS.registerSimpleItem("sturdygold_nugget");
+
     /** 万坚金原料（矿石原矿掉落物） */
     public static final DeferredItem<Item> RAW_STURDYGOLD = ITEMS.registerSimpleItem("raw_sturdygold");
 
