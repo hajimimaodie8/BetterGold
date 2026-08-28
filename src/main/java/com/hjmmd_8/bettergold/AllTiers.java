@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.hjmmd_8.bettergold;
 
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;

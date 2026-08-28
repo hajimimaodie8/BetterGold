@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.hjmmd_8.bettergold;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

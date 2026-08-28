@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.hjmmd_8.bettergold;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.Holder;

@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.hjmmd_8.bettergold;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;

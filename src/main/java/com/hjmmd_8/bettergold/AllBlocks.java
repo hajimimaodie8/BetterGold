@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.hjmmd_8.bettergold;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.BlockItem;
