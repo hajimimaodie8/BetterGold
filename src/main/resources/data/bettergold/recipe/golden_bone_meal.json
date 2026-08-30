@@ -9,5 +9,5 @@
     "G": { "item": "minecraft:gold_nugget" },
     "B": { "item": "minecraft:bone" }
   },
-  "result": { "id": "bettergold:golden_bone_meal" }
+  "result": { "id": "bettergold:golden_bone_meal", "count": 3 }
 }

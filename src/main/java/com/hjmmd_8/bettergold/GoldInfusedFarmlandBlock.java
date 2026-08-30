@@ -46,4 +46,18 @@ public class GoldInfusedFarmlandBlock extends Block {
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         // 无操作
     }
+
+    /** NeoForge：明确声明可支撑植物（金作物种植的关键检查） */
+    @Override
+    public net.neoforged.neoforge.common.util.TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos pos,
+                                                                       net.minecraft.core.Direction direction, BlockState plant) {
+        // 允许任何植物/作物种在金染耕地上
+        return net.neoforged.neoforge.common.util.TriState.TRUE;
+    }
+
+    /** 金染耕地肥沃（加速作物生长用） */
+    @Override
+    public boolean isFertile(BlockState state, BlockGetter level, BlockPos pos) {
+        return true;
+    }
 }

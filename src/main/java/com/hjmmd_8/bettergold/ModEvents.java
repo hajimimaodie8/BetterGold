@@ -227,14 +227,21 @@ public class ModEvents {
             entity.clearFire();
         }
 
-        // 金酿热可可 / 万坚金酿热可可：清除全部负面状态（抗寒/抗火由 FoodProperties 效果提供）
+        // 金酿热可可 / 万坚金酿热可可：只清除负面效果，保留正面效果（如夜视/力量等增益）
         if (item == AllItems.BREWED_HOT_COCOA.get() || item == AllItems.STURDYGOLD_BREWED_HOT_COCOA.get()) {
-            entity.removeAllEffects();
-            // 重新施加本应获得的正面效果（食物效果在 removeAllEffects 之前已应用，这里补回）
-            if (item == AllItems.BREWED_HOT_COCOA.get()) {
-                entity.addEffect(new MobEffectInstance(AllEffects.COLD_RESISTANCE, 3600, 0));
-            } else {
-                entity.addEffect(new MobEffectInstance(AllEffects.COLD_RESISTANCE, 19200, 0));
+            clearHarmfulEffects(entity);
+            // 抗寒性由 FoodProperties 效果提供（保留不重复添加）
+        }
+    }
+
+    /** 只清除实体身上的负面状态效果（保留正面效果） */
+    private static void clearHarmfulEffects(LivingEntity entity) {
+        java.util.Set<net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect>> effects =
+                java.util.Set.copyOf(entity.getActiveEffectsMap().keySet());
+        for (net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect : effects) {
+            // 只移除负面（HARMFUL）效果
+            if (effect.value().getCategory() == net.minecraft.world.effect.MobEffectCategory.HARMFUL) {
+                entity.removeEffect(effect);
             }
         }
     }
@@ -276,6 +283,9 @@ public class ModEvents {
         }
 
         if (opened) {
+            // 金钥匙使用音效（金属解锁声）
+            level.playSound(null, pos, net.minecraft.sounds.SoundEvents.IRON_DOOR_OPEN,
+                    net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
             // 消耗钥匙耐久（每次使用扣 1 点，64 耐久）
             if (!player.getAbilities().instabuild) {
                 held.hurtAndBreak(1, player, event.getHand() == net.minecraft.world.InteractionHand.MAIN_HAND
