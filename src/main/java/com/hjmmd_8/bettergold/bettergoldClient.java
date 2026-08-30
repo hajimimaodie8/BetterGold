@@ -45,6 +45,10 @@ public class bettergoldClient {
             ItemBlockRenderTypes.setRenderLayer(AllBlocks.STURDYGOLD_BARS.get(), cutoutMipped);
             ItemBlockRenderTypes.setRenderLayer(AllBlocks.GOLD_CHAIN.get(), cutoutMipped);
             ItemBlockRenderTypes.setRenderLayer(AllBlocks.STURDYGOLD_CHAIN.get(), cutoutMipped);
+
+            // 作物方块：cross 模型需要 cutout
+            ItemBlockRenderTypes.setRenderLayer(AllBlocks.GOLDEN_CARROT_CROP.get(), cutout);
+            ItemBlockRenderTypes.setRenderLayer(AllBlocks.GOLDEN_EGGPLANT_CROP.get(), cutout);
         });
     }
 }

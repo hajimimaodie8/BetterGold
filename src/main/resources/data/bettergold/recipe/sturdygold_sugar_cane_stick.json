@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNN",
+    "NSN",
+    "NNN"
+  ],
+  "key": {
+    "N": { "item": "bettergold:sturdygold_nugget" },
+    "S": { "item": "bettergold:golden_sugar_cane_stick" }
+  },
+  "result": { "id": "bettergold:sturdygold_sugar_cane_stick" }
+}

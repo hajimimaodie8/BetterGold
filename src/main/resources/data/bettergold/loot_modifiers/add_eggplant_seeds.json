@@ -1,0 +1,6 @@
+{
+  "type": "bettergold:add_eggplant_seeds",
+  "conditions": [],
+  "item": "bettergold:golden_eggplant_seeds",
+  "chance": 0.06
+}

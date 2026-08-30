@@ -10,12 +10,12 @@ import java.util.function.Supplier;
 
 /**
  * 万坚金(sturdygold)工具材料 SturdyGoldToolMaterial。
- * 数值：耐久 4096 / 挖掘速度 10.0 / 攻击加成 4.5 / 附魔值 24，
+ * 数值：耐久 6144 / 挖掘速度 10.0 / 攻击加成 4.5 / 附魔值 30，
  * 修复材料：万坚金锭。挖掘等级：最高级（可挖下界合金级方块）。
  */
 public enum AllTiers implements Tier {
 
-    STURDYGOLD(4096, 10.0F, 4.5F, 24,
+    STURDYGOLD(6144, 10.0F, 4.5F, 30,
             BlockTags.INCORRECT_FOR_NETHERITE_TOOL,
             () -> Ingredient.of(AllItems.STURDYGOLD_INGOT.get()));
 

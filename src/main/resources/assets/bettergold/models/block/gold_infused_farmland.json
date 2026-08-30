@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "bettergold:block/gold_infused_dirt",
+    "top": "bettergold:block/gold_infused_farmland"
+  }
+}

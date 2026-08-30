@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNN",
+    "NCN",
+    "NNN"
+  ],
+  "key": {
+    "N": { "item": "bettergold:sturdygold_nugget" },
+    "C": { "item": "minecraft:golden_carrot" }
+  },
+  "result": { "id": "bettergold:sturdygold_carrot" }
+}

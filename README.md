@@ -1,25 +1,50 @@
+# Better Gold（更有用的金）
 
-Installation information
-=======
+一个 6 年前网易版《我的世界》模组的**精神续作**，从零重建于 NeoForge 1.21.1。
+所有贴图均为本项目原创手绘资源。
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+## 内容
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+### 金系方块（金制装饰系列）
+- 金砖块 / 金砖楼梯 / 金砖台阶 / 金砖墙
+- 金栏杆 / 金门 / 金活板门 / 金灯笼 / 金链
+- 金砖块可作为信标基座
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+### 万坚金（SturdyGold）—— 全新金属
+- 万坚金块 / 万坚金砖块 / 万坚金砖楼梯 / 台阶 / 墙
+- 万坚金栏杆 / 门 / 活板门 / 灯笼 / 链
+- 万坚金锭 / 万坚金粒 / 万坚金原料 / 万坚金升级锻造模板
+- 万坚金工具全套（剑 / 斧 / 镐 / 锹 / 锄）
+- 万坚金盔甲全套（头盔 / 胸甲 / 护腿 / 靴子）
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+### 炼金材料
+- 炼金燃油 / 混合晶石堆 / 金钱贝 / 金钱贝模具
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+## 特色机制
+
+- **万坚金品质**：工具耐久 4096、盔甲耐久 814~1184，全部防火防爆
+- **猪灵友好**：穿戴万坚金盔甲（单件即可）猪灵中立；任意一件盔甲时猪灵以物易物产出翻倍
+- **工具特效**：万坚金工具攻击生物必定掉落金系物品（附魔金苹果仅 1% 概率）
+- **金钱贝获取**：猪灵蛮兵 50% / 猪灵 15% / 僵尸猪灵 5% 掉落；猪灵交易 6% 概率获得；或用模具（1 金块 + 1 金钱贝 + 1 烈焰粉合成，64 耐久）配合金锭生产
+- **信标基座**：金砖块、万坚金块、万坚金砖块可作为信标金字塔基座
+
+## 获取与安装
+
+1. 需要 [NeoForge 21.1.x](https://neoforged.net/)（Minecraft 1.21.1）
+2. 将构建出的 `bettergold-1.0.0.jar` 放入 `.minecraft/mods` 目录
+3. 启动游戏即可
+
+## 开发环境
+
+```bash
+gradlew build          # 构建
+gradlew runClient      # 运行客户端
+gradlew runData        # 数据生成
+gradlew runServer      # 运行服务器
+```
+
+## 许可证
+
+[MIT](LICENSE)
+
+Copyright (c) 2026 hjmmd_8

@@ -36,7 +36,7 @@ displayName="${mod_name}" #mandatory
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
-#logoFile="bettergold.png" #optional
+logoFile="bettergold.png"
 
 # A text field displayed in the mod UI
 #credits="" #optional
@@ -46,11 +46,11 @@ authors="hjmmd_8"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A gold‑expansion mod ported from NetEase Edition to NeoForge 1.21.1, fulfilling a six‑year‑old old project promise.
-Expands vanilla gold content with various gold‑themed decorative blocks, and introduces the brand‑new metal "SturdyGold" alongside its full set of tools and armors.
-SturdyGold gear features extremely high durability and great enchantability. Wearing the full‑set armor grants piglin neutrality and multiplies loot gained from piglin bartering. Tools have a chance to drop various gold‑related loot upon hitting living entities.
+A spiritual successor to a 6-year-old NetEase Edition mod, now rebuilt from scratch for NeoForge 1.21.1.
+Expands vanilla gold content with various gold-themed decorative blocks, and introduces the brand-new metal "SturdyGold" alongside its full set of tools and armors.
+SturdyGold gear features extremely high durability and great enchantability. Wearing the armor grants piglin neutrality and multiplies loot gained from piglin bartering. Tools have a chance to drop various gold-related loot upon hitting living entities.
 Gold bricks and SturdyGold blocks can serve as beacon base blocks for both building and survival gameplay.
-This port restores all original mechanics. Original textures were lost due to NetEase version update bugs, and assets are re‑supplied for this Java port.
+All textures are original hand-drawn assets created for this project.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

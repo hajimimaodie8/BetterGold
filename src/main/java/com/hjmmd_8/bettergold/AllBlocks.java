@@ -195,6 +195,45 @@ public class AllBlocks {
                     .sound(net.minecraft.world.level.block.SoundType.NETHERITE_BLOCK)
                     .noOcclusion()));
 
+    // ==================== 金作物相关方块 ====================
+
+    /** 金染土：用锄头点一下变成金染耕地 */
+    public static final DeferredBlock<Block> GOLD_INFUSED_DIRT = BLOCKS.register("gold_infused_dirt",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.5F)
+                    .sound(net.minecraft.world.level.block.SoundType.GRAVEL)));
+
+    /** 金染耕地：金作物专用耕地，无需放水湿润 */
+    public static final DeferredBlock<GoldInfusedFarmlandBlock> GOLD_INFUSED_FARMLAND = BLOCKS.register("gold_infused_farmland",
+            () -> new GoldInfusedFarmlandBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.DIRT)
+                    .strength(0.6F)
+                    .sound(net.minecraft.world.level.block.SoundType.GRAVEL)
+                    .randomTicks()));
+
+    /** 金胡萝卜作物：种子=万坚金胡萝卜（当种子种），成熟掉万坚金胡萝卜 */
+    public static final DeferredBlock<GoldCropBlock> GOLDEN_CARROT_CROP = BLOCKS.register("golden_carrot_crop",
+            () -> new GoldCropBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.PLANT)
+                    .noCollission()
+                    .randomTicks()
+                    .instabreak()
+                    .sound(net.minecraft.world.level.block.SoundType.CROP),
+                    () -> AllItems.STURDYGOLD_CARROT.get(),
+                    () -> AllItems.STURDYGOLD_CARROT.get()));
+
+    /** 金钱茄作物：种子=金钱茄种子，成熟掉金钱茄 */
+    public static final DeferredBlock<GoldCropBlock> GOLDEN_EGGPLANT_CROP = BLOCKS.register("golden_eggplant_crop",
+            () -> new GoldCropBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.PLANT)
+                    .noCollission()
+                    .randomTicks()
+                    .instabreak()
+                    .sound(net.minecraft.world.level.block.SoundType.CROP),
+                    () -> AllItems.GOLDEN_EGGPLANT_SEEDS.get(),
+                    () -> AllItems.GOLDEN_EGGPLANT.get()));
+
     // ==================== BlockItem ====================
 
     public static final DeferredItem<BlockItem> GOLD_BRICKS_ITEM = AllItems.ITEMS.registerSimpleBlockItem("gold_bricks", GOLD_BRICKS);
@@ -218,6 +257,9 @@ public class AllBlocks {
     public static final DeferredItem<BlockItem> STURDYGOLD_TRAPDOOR_ITEM = AllItems.ITEMS.registerSimpleBlockItem("sturdygold_trapdoor", STURDYGOLD_TRAPDOOR);
     public static final DeferredItem<BlockItem> STURDYGOLD_LANTERN_ITEM = AllItems.ITEMS.registerSimpleBlockItem("sturdygold_lantern", STURDYGOLD_LANTERN);
     public static final DeferredItem<BlockItem> STURDYGOLD_CHAIN_ITEM = AllItems.ITEMS.registerSimpleBlockItem("sturdygold_chain", STURDYGOLD_CHAIN);
+
+    public static final DeferredItem<BlockItem> GOLD_INFUSED_DIRT_ITEM = AllItems.ITEMS.registerSimpleBlockItem("gold_infused_dirt", GOLD_INFUSED_DIRT);
+    // 金染耕地：无物品形态（像原版耕地一样只能由锄头转化生成，不能从物品栏获取）
 
     private AllBlocks() {
     }

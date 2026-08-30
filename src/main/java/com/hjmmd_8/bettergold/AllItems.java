@@ -1,10 +1,15 @@
 package com.hjmmd_8.bettergold;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.AxeItem;
@@ -15,6 +20,8 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -49,6 +56,133 @@ public class AllItems {
 
     /** 金钱贝 */
     public static final DeferredItem<Item> GOLDEN_COWRIE = ITEMS.registerSimpleItem("golden_cowrie");
+
+    // ==================== 金系食物 ====================
+
+    /** 金钱巧克力棒：9 饥饿 / 7.2 饱和度 */
+    public static final DeferredItem<Item> GOLDEN_CHOCOLATE_BAR = ITEMS.registerSimpleItem("golden_chocolate_bar",
+            new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(9).saturationModifier(0.8F).build()));
+
+    /** 金酿热可可：清除负面 + 3 分钟抗寒性（饮品，喝完返还玻璃瓶） */
+    public static final DeferredItem<Item> BREWED_HOT_COCOA = ITEMS.registerSimpleItem("brewed_hot_cocoa",
+            new Item.Properties().stacksTo(1).craftRemainder(net.minecraft.world.item.Items.GLASS_BOTTLE)
+                    .food(new FoodProperties.Builder()
+                            .nutrition(6).saturationModifier(0.6F).alwaysEdible()
+                            .effect(() -> new MobEffectInstance(AllEffects.COLD_RESISTANCE, 3600), 1.0F)
+                            .build()));
+
+    /** 金淇淋：7 饥饿 / 9 饱和度，去燃烧状态，返还木碗 */
+    public static final DeferredItem<Item> GOLDEN_ICE_CREAM = ITEMS.registerSimpleItem("golden_ice_cream",
+            new Item.Properties().craftRemainder(net.minecraft.world.item.Items.BOWL)
+                    .food(new FoodProperties.Builder()
+                            .nutrition(7).saturationModifier(1.29F).build()));
+
+    /** 金甘蔗棒：3 饥饿 / 5 饱和度（手持像工具/棍子） */
+    public static final DeferredItem<Item> GOLDEN_SUGAR_CANE_STICK = ITEMS.registerSimpleItem("golden_sugar_cane_stick",
+            new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(3).saturationModifier(1.67F).build()));
+
+    /** 金钱茄：9 饥饿 / 11.4 饱和度 + 30 秒村庄英雄 2 */
+    public static final DeferredItem<Item> GOLDEN_EGGPLANT = ITEMS.registerSimpleItem("golden_eggplant",
+            new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(9).saturationModifier(1.27F)
+                    .effect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 600, 1), 1.0F)
+                    .build()));
+
+    /** 金钱茄种子：可种植在金染耕地上（绑定金钱茄作物方块） */
+    public static final DeferredItem<Item> GOLDEN_EGGPLANT_SEEDS = ITEMS.register("golden_eggplant_seeds",
+            () -> new net.minecraft.world.item.ItemNameBlockItem(AllBlocks.GOLDEN_EGGPLANT_CROP.get(),
+                    new Item.Properties()));
+
+    /** 金骨粉（金作物专属骨粉，只催熟金作物） */
+    public static final DeferredItem<net.minecraft.world.item.BoneMealItem> GOLDEN_BONE_MEAL =
+            ITEMS.register("golden_bone_meal", () -> new net.minecraft.world.item.BoneMealItem(
+                    new Item.Properties()) {
+                @Override
+                public net.minecraft.world.InteractionResult useOn(net.minecraft.world.item.context.UseOnContext context) {
+                    Level level = context.getLevel();
+                    BlockPos pos = context.getClickedPos();
+                    BlockState state = level.getBlockState(pos);
+                    // 只作用于金作物（金胡萝卜 / 金钱茄）
+                    if (state.getBlock() instanceof GoldCropBlock crop) {
+                        if (crop.isValidBonemealTarget(level, pos, state)) {
+                            if (level instanceof ServerLevel serverLevel) {
+                                if (net.minecraft.world.item.BoneMealItem.applyBonemeal(
+                                        context.getItemInHand(), level, pos, context.getPlayer())) {
+                                    level.levelEvent(2005, pos, 0); // 骨粉粒子
+                                    if (!context.getPlayer().getAbilities().instabuild) {
+                                        context.getItemInHand().shrink(1);
+                                    }
+                                    return net.minecraft.world.InteractionResult.SUCCESS;
+                                }
+                            }
+                        }
+                    }
+                    return net.minecraft.world.InteractionResult.PASS;
+                }
+            });
+
+    /** 金钥匙：用于打开铁门/铁活板门/万坚金门/万坚金活板门（手持像工具），64 耐久 */
+    public static final DeferredItem<Item> GOLDEN_KEY = ITEMS.registerSimpleItem("golden_key",
+            new Item.Properties().durability(64));
+
+    // ==================== 万坚金食物（全部防火防爆） ====================
+
+    /** 万坚金苹果：8 饥饿 / 19.6 饱和度 + 6分钟伤害吸收5 + 36秒生命恢复3 + 6分钟抗性1 + 6分钟抗火1 */
+    public static final DeferredItem<Item> STURDYGOLD_APPLE = ITEMS.registerSimpleItem("sturdygold_apple",
+            new Item.Properties().fireResistant().food(new FoodProperties.Builder()
+                    .nutrition(8).saturationModifier(2.45F)
+                    .effect(new MobEffectInstance(MobEffects.ABSORPTION, 7200, 4), 1.0F)
+                    .effect(new MobEffectInstance(MobEffects.REGENERATION, 720, 2), 1.0F)
+                    .effect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 7200, 0), 1.0F)
+                    .effect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 7200, 0), 1.0F)
+                    .build()));
+
+    /** 万坚金胡萝卜：12 饥饿 / 28.8 饱和度 + 3 分钟夜视；可种在金染耕地（金胡萝卜作物） */
+    public static final DeferredItem<Item> STURDYGOLD_CARROT = ITEMS.register("sturdygold_carrot",
+            () -> new SeedFoodItem(AllBlocks.GOLDEN_CARROT_CROP.get(),
+                    new Item.Properties().fireResistant().food(new FoodProperties.Builder()
+                            .nutrition(12).saturationModifier(2.4F)
+                            .effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 3600, 0), 1.0F)
+                            .build())));
+
+    /** 万坚金巧克力棒：18 饥饿 / 14.4 饱和度 + 3 分钟抗寒性 */
+    public static final DeferredItem<Item> STURDYGOLD_CHOCOLATE_BAR = ITEMS.registerSimpleItem("sturdygold_chocolate_bar",
+            new Item.Properties().fireResistant().food(new FoodProperties.Builder()
+                    .nutrition(18).saturationModifier(0.8F)
+                    .effect(() -> new MobEffectInstance(AllEffects.COLD_RESISTANCE, 3600, 0), 1.0F)
+                    .build()));
+
+    /** 万坚金酿热可可：清除负面 + 16 分钟抗寒性（饮品，喝完返还玻璃瓶） */
+    public static final DeferredItem<Item> STURDYGOLD_BREWED_HOT_COCOA = ITEMS.registerSimpleItem("sturdygold_brewed_hot_cocoa",
+            new Item.Properties().stacksTo(1).fireResistant().craftRemainder(net.minecraft.world.item.Items.GLASS_BOTTLE)
+                    .food(new FoodProperties.Builder()
+                            .nutrition(10).saturationModifier(0.9F).alwaysEdible()
+                            .effect(() -> new MobEffectInstance(AllEffects.COLD_RESISTANCE, 19200, 0), 1.0F)
+                            .build()));
+
+    /** 万坚金淇淋：14 饥饿 / 18 饱和度 + 3 分钟抗火，返还木碗 */
+    public static final DeferredItem<Item> STURDYGOLD_ICE_CREAM = ITEMS.registerSimpleItem("sturdygold_ice_cream",
+            new Item.Properties().fireResistant().craftRemainder(net.minecraft.world.item.Items.BOWL)
+                    .food(new FoodProperties.Builder()
+                            .nutrition(14).saturationModifier(1.29F)
+                            .effect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 3600, 0), 1.0F)
+                            .build()));
+
+    /** 万坚金甘蔗棒：6 饥饿 / 10 饱和度 + 3 分钟迅捷 1（手持像工具/棍子） */
+    public static final DeferredItem<Item> STURDYGOLD_SUGAR_CANE_STICK = ITEMS.registerSimpleItem("sturdygold_sugar_cane_stick",
+            new Item.Properties().fireResistant().food(new FoodProperties.Builder()
+                    .nutrition(6).saturationModifier(1.67F)
+                    .effect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 3600, 0), 1.0F)
+                    .build()));
+
+    /** 万坚金钱茄：18 饥饿 / 22.8 饱和度 + 3 分钟力量 1 */
+    public static final DeferredItem<Item> STURDYGOLD_EGGPLANT = ITEMS.registerSimpleItem("sturdygold_eggplant",
+            new Item.Properties().fireResistant().food(new FoodProperties.Builder()
+                    .nutrition(18).saturationModifier(1.27F)
+                    .effect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 3600, 0), 1.0F)
+                    .build()));
 
     // ==================== 金钱贝模具 ====================
 
@@ -115,19 +249,19 @@ public class AllItems {
                     .attributes(HoeItem.createAttributes(AllTiers.STURDYGOLD, 1.5F, 0.2F))));
 
     // ==================== 万坚金盔甲（防火防爆 + 单件即可让猪灵中立） ====================
-    // 耐久：头盔 814 / 胸甲 1184 / 护腿 1110 / 靴子 962
+    // 耐久：头盔 1221 / 胸甲 1176 / 护腿 1665 / 靴子 1443
 
     public static final DeferredItem<ArmorItem> STURDYGOLD_HELMET = ITEMS.register("sturdygold_helmet",
-            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.HELMET, new Item.Properties().durability(814).fireResistant()));
+            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.HELMET, new Item.Properties().durability(1221).fireResistant()));
 
     public static final DeferredItem<ArmorItem> STURDYGOLD_CHESTPLATE = ITEMS.register("sturdygold_chestplate",
-            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.CHESTPLATE, new Item.Properties().durability(1184).fireResistant()));
+            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.CHESTPLATE, new Item.Properties().durability(1176).fireResistant()));
 
     public static final DeferredItem<ArmorItem> STURDYGOLD_LEGGINGS = ITEMS.register("sturdygold_leggings",
-            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.LEGGINGS, new Item.Properties().durability(1110).fireResistant()));
+            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.LEGGINGS, new Item.Properties().durability(1665).fireResistant()));
 
     public static final DeferredItem<ArmorItem> STURDYGOLD_BOOTS = ITEMS.register("sturdygold_boots",
-            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.BOOTS, new Item.Properties().durability(962).fireResistant()));
+            () -> new SturdygoldArmorItem(AllArmorMaterials.STURDYGOLD, ArmorItem.Type.BOOTS, new Item.Properties().durability(1443).fireResistant()));
 
     private AllItems() {
     }

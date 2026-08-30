@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GSG",
+    "GGG"
+  ],
+  "key": {
+    "G": { "item": "minecraft:gold_nugget" },
+    "S": { "item": "minecraft:sugar_cane" }
+  },
+  "result": { "id": "bettergold:golden_sugar_cane_stick", "count": 2 }
+}

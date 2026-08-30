@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "ingredient": { "item": "bettergold:golden_eggplant_seeds" },
+  "result": { "id": "minecraft:gold_nugget" },
+  "experience": 0.3,
+  "cookingtime": 200
+}

@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * 万坚金盔甲材料 SturdyGoldArmorMaterial。
- * 附魔值 24 / 韧性 6 / 击退抗性 0.15，修复材料：万坚金锭。
+ * 附魔值 30 / 韧性 6 / 击退抗性 0.15，修复材料：万坚金锭。
  * 护甲值：头盔 5 / 胸甲 10 / 护腿 8 / 靴子 5。
  */
 public class AllArmorMaterials {
@@ -25,7 +25,7 @@ public class AllArmorMaterials {
                 map.put(ArmorItem.Type.CHESTPLATE, 10);
                 map.put(ArmorItem.Type.HELMET, 5);
             }),
-            24,
+            30,
             SoundEvents.ARMOR_EQUIP_NETHERITE,
             () -> Ingredient.of(AllItems.STURDYGOLD_INGOT.get()),
             List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(bettergold.MODID, "sturdygold"))),

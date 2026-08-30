@@ -55,6 +55,12 @@ public class bettergold {
         CREATIVE_MODE_TABS.register(modEventBus);
         // Register custom recipe serializers
         AllRecipes.RECIPE_SERIALIZERS.register(modEventBus);
+        // Register custom mob effects
+        AllEffects.EFFECTS.register(modEventBus);
+        // Register global loot modifiers
+        AllLootModifiers.GLM.register(modEventBus);
+        // Register brewing recipes on the game event bus (RegisterBrewingRecipesEvent is NOT an IModBusEvent)
+        NeoForge.EVENT_BUS.addListener(ModBrewing::registerBrewingRecipes);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (bettergold) to respond directly to events.

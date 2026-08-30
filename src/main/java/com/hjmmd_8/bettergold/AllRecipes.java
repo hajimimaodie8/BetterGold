@@ -24,6 +24,16 @@ public class AllRecipes {
             RECIPE_SERIALIZERS.register("raw_sturdygold",
                     () -> new SimpleCraftingRecipeSerializer<>(RawSturdygoldRecipe::new));
 
+    /** 金钱巧克力棒配方：返还铁桶 */
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<GoldenFoodRecipe>> GOLDEN_CHOCOLATE_BAR_RECIPE =
+            RECIPE_SERIALIZERS.register("golden_chocolate_bar",
+                    () -> new SimpleCraftingRecipeSerializer<>(cat -> new GoldenFoodRecipe(cat, 0)));
+
+    /** 金冰淇淋配方：返还铁桶 */
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<GoldenFoodRecipe>> GOLDEN_ICE_CREAM_RECIPE =
+            RECIPE_SERIALIZERS.register("golden_ice_cream",
+                    () -> new SimpleCraftingRecipeSerializer<>(cat -> new GoldenFoodRecipe(cat, 1)));
+
     private AllRecipes() {
     }
 }
