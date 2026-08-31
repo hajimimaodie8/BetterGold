@@ -17,13 +17,13 @@ public class ModBrewing {
     public static void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
         var builder = event.getBuilder();
 
-        // 1. 金酿热可可：金钱巧克力棒 + 玻璃瓶 → 金酿热可可
+        // 1. 金酿热可可：玻璃瓶（基底） + 金钱巧克力棒（材料） → 金酿热可可
         builder.addRecipe(
-                Ingredient.of(AllItems.GOLDEN_CHOCOLATE_BAR.get()),
                 Ingredient.of(Items.GLASS_BOTTLE),
+                Ingredient.of(AllItems.GOLDEN_CHOCOLATE_BAR.get()),
                 new ItemStack(AllItems.BREWED_HOT_COCOA.get()));
 
-        // 2. 万坚金酿热可可：金酿热可可 + 万坚金巧克力棒 → 万坚金酿热可可
+        // 2. 万坚金酿热可可：金酿热可可（基底） + 万坚金巧克力棒（材料） → 万坚金酿热可可
         builder.addRecipe(
                 Ingredient.of(AllItems.BREWED_HOT_COCOA.get()),
                 Ingredient.of(AllItems.STURDYGOLD_CHOCOLATE_BAR.get()),

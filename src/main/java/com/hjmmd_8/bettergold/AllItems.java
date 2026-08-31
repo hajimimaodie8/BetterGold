@@ -22,6 +22,7 @@ import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -84,10 +85,10 @@ public class AllItems {
             new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(3).saturationModifier(1.67F).build()));
 
-    /** 金钱茄：9 饥饿 / 11.4 饱和度 + 30 秒村庄英雄 2 */
+    /** 金钱茄：9 饥饿 / 11.4 饱和度 + 30 秒村庄英雄 2（增益食物，满饥饿可吃） */
     public static final DeferredItem<Item> GOLDEN_EGGPLANT = ITEMS.registerSimpleItem("golden_eggplant",
             new Item.Properties().food(new FoodProperties.Builder()
-                    .nutrition(9).saturationModifier(1.27F)
+                    .nutrition(9).saturationModifier(1.27F).alwaysEdible()
                     .effect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 600, 1), 1.0F)
                     .build()));
 
@@ -96,7 +97,7 @@ public class AllItems {
             () -> new net.minecraft.world.item.ItemNameBlockItem(AllBlocks.GOLDEN_EGGPLANT_CROP.get(),
                     new Item.Properties()));
 
-    /** 金骨粉（金作物专属骨粉，只催熟金作物） */
+    /** 金骨粉（金作物专属骨粉：一点就熟 + 骨粉音效，只催熟金作物） */
     public static final DeferredItem<net.minecraft.world.item.BoneMealItem> GOLDEN_BONE_MEAL =
             ITEMS.register("golden_bone_meal", () -> new net.minecraft.world.item.BoneMealItem(
                     new Item.Properties()) {
@@ -109,14 +110,17 @@ public class AllItems {
                     if (state.getBlock() instanceof GoldCropBlock crop) {
                         if (crop.isValidBonemealTarget(level, pos, state)) {
                             if (level instanceof ServerLevel serverLevel) {
-                                if (net.minecraft.world.item.BoneMealItem.applyBonemeal(
-                                        context.getItemInHand(), level, pos, context.getPlayer())) {
-                                    level.levelEvent(2005, pos, 0); // 骨粉粒子
-                                    if (!context.getPlayer().getAbilities().instabuild) {
-                                        context.getItemInHand().shrink(1);
-                                    }
-                                    return net.minecraft.world.InteractionResult.SUCCESS;
+                                // 一点就熟：直接把作物催熟到最大阶段
+                                int maxAge = crop.getMaxAge();
+                                level.setBlock(pos, crop.getStateForAge(maxAge), 2);
+                                // 骨粉粒子 + 音效
+                                level.levelEvent(2005, pos, 0);
+                                level.playSound(null, pos, net.minecraft.sounds.SoundEvents.BONE_MEAL_USE,
+                                        net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
+                                if (!context.getPlayer().getAbilities().instabuild) {
+                                    context.getItemInHand().shrink(1);
                                 }
+                                return net.minecraft.world.InteractionResult.SUCCESS;
                             }
                         }
                     }
@@ -248,6 +252,35 @@ public class AllItems {
             () -> new HoeItem(AllTiers.STURDYGOLD, new Item.Properties()
                     .fireResistant()
                     .attributes(HoeItem.createAttributes(AllTiers.STURDYGOLD, 1.5F, 0.2F))));
+
+    /**
+     * 万坚金小刀（Farmer's Delight 联动）：继承 FD 的 KnifeItem（切割砧板/收获等功能）。
+     * 耐久 6144 / 破坏能力 14 / 附魔能力 30（继承万坚金器具的爆金技能，见 {@link ModEvents}）。
+     *
+     * FD 是 OPTIONAL 依赖，因此本物品**条件注册**：
+     * - 装了 FD：真正注册 KnifeItem（反射创建，避免字节码硬引用 FD 类导致没装 FD 时
+     *   NoClassDefFoundError——JVM 类加载验证阶段会解析字节码里的类引用，ModList 分支
+     *   是运行时才判断的，来不及阻止）；
+     * - 没装 FD：字段为 null，物品完全不注册——JEI、创造模式物品栏都不会出现小刀。
+     */
+    public static final DeferredItem<Item> STURDYGOLD_KNIFE =
+            ModList.get().isLoaded("farmersdelight")
+                    ? ITEMS.register("sturdygold_knife", () -> createSturdygoldKnife())
+                    : null;
+
+    /** 反射创建 FD 的 KnifeItem；反射失败兜底为普通物品（此时 FD 必然已装，理论上不会失败） */
+    private static Item createSturdygoldKnife() {
+        try {
+            Class<?> knifeClass = Class.forName("vectorwing.farmersdelight.common.item.KnifeItem");
+            var ctor = knifeClass.getConstructor(net.minecraft.world.item.Tier.class, Item.Properties.class);
+            Item.Properties props = new Item.Properties()
+                    .fireResistant()
+                    .attributes(net.minecraft.world.item.DiggerItem.createAttributes(AllTiers.STURDYGOLD, 8.5F, -2.0F));
+            return (Item) ctor.newInstance(AllTiers.STURDYGOLD, props);
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            return new Item(new Item.Properties().fireResistant());
+        }
+    }
 
     // ==================== 万坚金盔甲（防火防爆 + 单件即可让猪灵中立） ====================
     // 耐久：头盔 1221 / 胸甲 1176 / 护腿 1665 / 靴子 1443

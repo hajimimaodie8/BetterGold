@@ -19,10 +19,15 @@ public class AllRecipes {
             RECIPE_SERIALIZERS.register("golden_cowrie_mold",
                     () -> new SimpleCraftingRecipeSerializer<>(GoldenCowrieMoldRecipe::new));
 
-    /** 万坚金原料配方：炼金燃油合成后返还玻璃瓶 */
+    /** 万坚金原料配方（金钱贝版）：炼金燃油合成后返还玻璃瓶 */
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<RawSturdygoldRecipe>> RAW_STURDYGOLD_RECIPE =
             RECIPE_SERIALIZERS.register("raw_sturdygold",
-                    () -> new SimpleCraftingRecipeSerializer<>(RawSturdygoldRecipe::new));
+                    () -> new SimpleCraftingRecipeSerializer<>(cat -> new RawSturdygoldRecipe(cat, 0)));
+
+    /** 万坚金原料配方（金钱茄版，易金台设定）：金钱贝换成金钱茄 */
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<RawSturdygoldRecipe>> RAW_STURDYGOLD_EGGPLANT_RECIPE =
+            RECIPE_SERIALIZERS.register("raw_sturdygold_eggplant",
+                    () -> new SimpleCraftingRecipeSerializer<>(cat -> new RawSturdygoldRecipe(cat, 1)));
 
     /** 金钱巧克力棒配方：返还铁桶 */
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<GoldenFoodRecipe>> GOLDEN_CHOCOLATE_BAR_RECIPE =

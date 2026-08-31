@@ -156,13 +156,38 @@ public class ModEvents {
 
     // ==================== 工具方法 ====================
 
-    /** 按权重掷出金系掉落：附魔金苹果 1%，其余均分 99% */
+    /** 按权重掷出金系掉落：附魔金苹果 1%，其余均分 99%（受配置黑/白名单过滤） */
     private static Item rollGoldLoot(Player player) {
         var random = player.getRandom();
-        if (random.nextDouble() < ENCHANTED_GOLDEN_APPLE_WEIGHT) {
+        // 附魔金苹果 1% 特判（若被过滤则跳过）
+        if (random.nextDouble() < ENCHANTED_GOLDEN_APPLE_WEIGHT
+                && isAllowedByConfig(Items.ENCHANTED_GOLDEN_APPLE)) {
             return Items.ENCHANTED_GOLDEN_APPLE;
         }
-        return GOLD_LOOT_POOL.get(random.nextInt(GOLD_LOOT_POOL.size()));
+        // 构建按配置过滤后的掉落池
+        List<Item> pool = GOLD_LOOT_POOL.stream()
+                .filter(ModEvents::isAllowedByConfig)
+                .toList();
+        if (pool.isEmpty()) {
+            return Items.GOLD_NUGGET; // 兜底：全被过滤时掉金粒
+        }
+        return pool.get(random.nextInt(pool.size()));
+    }
+
+    /** 按配置黑/白名单判断物品是否允许掉落 */
+    private static boolean isAllowedByConfig(Item item) {
+        String mode = Config.GOLD_LOOT_MODE.get();
+        List<? extends String> configured = Config.GOLD_LOOT_ITEMS.get();
+        if (configured == null || configured.isEmpty()) {
+            return true; // 空列表 = 不限制
+        }
+        String itemName = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).toString();
+        boolean listed = configured.contains(itemName);
+        if ("whitelist".equalsIgnoreCase(mode)) {
+            return listed;
+        }
+        // blacklist（默认）
+        return !listed;
     }
 
     /** 玩家是否穿戴任意一件万坚金盔甲（单件即可，无需全套） */
@@ -173,14 +198,15 @@ public class ModEvents {
                 || player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET).is(AllItems.STURDYGOLD_BOOTS.get());
     }
 
-    /** 校验物品是否为万坚金工具 */
+    /** 校验物品是否为万坚金工具（含万坚金小刀，FD 联动——未装 FD 时小刀为 null 不参与判断） */
     private static boolean isSturdygoldTool(ItemStack stack) {
         Item item = stack.getItem();
         return item == AllItems.STURDYGOLD_SWORD.get()
                 || item == AllItems.STURDYGOLD_PICKAXE.get()
                 || item == AllItems.STURDYGOLD_AXE.get()
                 || item == AllItems.STURDYGOLD_SHOVEL.get()
-                || item == AllItems.STURDYGOLD_HOE.get();
+                || item == AllItems.STURDYGOLD_HOE.get()
+                || (AllItems.STURDYGOLD_KNIFE != null && item == AllItems.STURDYGOLD_KNIFE.get());
     }
 
     // ==================== 抗寒性：免疫冰冻伤害 ====================
@@ -292,6 +318,40 @@ public class ModEvents {
                         ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
             }
             event.setCanceled(true);
+        }
+    }
+
+    // ==================== 原版金胡萝卜本尊可直接种到金染耕地 ====================
+
+    @SubscribeEvent
+    public static void onRightClickGoldenCarrot(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        if (event.getLevel().isClientSide) {
+            return;
+        }
+        Player player = event.getEntity();
+        ItemStack held = event.getItemStack();
+        // 手持原版金胡萝卜
+        if (!held.is(Items.GOLDEN_CARROT)) {
+            return;
+        }
+        Level level = event.getLevel();
+        BlockPos pos = event.getPos();
+        BlockState clickedState = level.getBlockState(pos);
+        // 点击金染耕地
+        if (!(clickedState.getBlock() instanceof GoldInfusedFarmlandBlock)) {
+            return;
+        }
+        BlockPos plantPos = pos.above();
+        BlockState plantState = level.getBlockState(plantPos);
+        if (plantState.isAir() || plantState.canBeReplaced()) {
+            BlockState cropState = AllBlocks.GOLDEN_CARROT_CROP.get().defaultBlockState();
+            if (cropState.canSurvive(level, plantPos)) {
+                level.setBlock(plantPos, cropState, 3);
+                if (!player.getAbilities().instabuild) {
+                    held.shrink(1);
+                }
+                event.setCanceled(true);
+            }
         }
     }
 }

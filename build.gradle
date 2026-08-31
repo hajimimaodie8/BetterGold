@@ -27,7 +27,18 @@ sourceSets.main.resources {
 }
 
 repositories {
-    // Add here additional repositories if required by some of the dependencies below.
+    // Modrinth Maven, used for optional mod dependencies such as Farmer's Delight.
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 base {
@@ -136,6 +147,15 @@ dependencies {
 
     // Example project dependency using a sister or child project:
     // implementation project(":myproject")
+
+    // Optional integration with Farmer's Delight (农夫乐事), resolved from the Modrinth Maven.
+    // The mod is OPTIONAL at runtime: bettergold loads fine without it, and the API is available
+    // at compile time to write integration recipes (cooking pot, cutting board, ...).
+    // compileOnly -> available when writing code against FD classes.
+    // localRuntime -> loaded in the dev client/server so integration can be tested, but never
+    // pulled in as a dependency of this mod by consumers.
+    compileOnly "maven.modrinth:farmers-delight:${farmersdelight_version}"
+    localRuntime "maven.modrinth:farmers-delight:${farmersdelight_version}"
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

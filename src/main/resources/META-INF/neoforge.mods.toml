@@ -90,6 +90,17 @@ All textures are original hand-drawn assets created for this project.
     ordering="NONE"
     side="BOTH"
 
+# OPTIONAL integration dependency: Farmer's Delight (农夫乐事).
+# bettergold loads and runs fine without it; when present, integration recipes can use its content.
+# NOTE: versionRange compares against the Farmer's Delight MOD version (e.g. 1.3.1), not the game version.
+# Minimum 1.3.1 (2025 release) for stability; older versions may load but are unsupported.
+[[dependencies.${mod_id}]]
+    modId="farmersdelight"
+    type="optional"
+    versionRange="[1.3.1,)"
+    ordering="AFTER"
+    side="BOTH"
+
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.
