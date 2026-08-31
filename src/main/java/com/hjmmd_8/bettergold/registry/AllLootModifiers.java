@@ -1,4 +1,6 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.registry;
+
+import com.hjmmd_8.bettergold.bettergold;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

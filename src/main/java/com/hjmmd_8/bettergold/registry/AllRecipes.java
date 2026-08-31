@@ -1,4 +1,9 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.registry;
+
+import com.hjmmd_8.bettergold.bettergold;
+import com.hjmmd_8.bettergold.recipe.GoldenCowrieMoldRecipe;
+import com.hjmmd_8.bettergold.recipe.GoldenFoodRecipe;
+import com.hjmmd_8.bettergold.recipe.RawSturdygoldRecipe;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;

@@ -1,5 +1,7 @@
 package com.hjmmd_8.bettergold;
 
+import com.hjmmd_8.bettergold.registry.AllBlocks;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;

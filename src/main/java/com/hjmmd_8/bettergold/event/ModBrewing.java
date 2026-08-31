@@ -1,4 +1,6 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.event;
+
+import com.hjmmd_8.bettergold.registry.AllItems;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

@@ -1,4 +1,4 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.item;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

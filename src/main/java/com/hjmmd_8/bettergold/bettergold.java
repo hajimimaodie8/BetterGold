@@ -1,5 +1,14 @@
 package com.hjmmd_8.bettergold;
 
+import com.hjmmd_8.bettergold.config.Config;
+import com.hjmmd_8.bettergold.event.ModBrewing;
+import com.hjmmd_8.bettergold.event.ModEvents;
+import com.hjmmd_8.bettergold.registry.AllBlocks;
+import com.hjmmd_8.bettergold.registry.AllEffects;
+import com.hjmmd_8.bettergold.registry.AllItems;
+import com.hjmmd_8.bettergold.registry.AllLootModifiers;
+import com.hjmmd_8.bettergold.registry.AllRecipes;
+
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;

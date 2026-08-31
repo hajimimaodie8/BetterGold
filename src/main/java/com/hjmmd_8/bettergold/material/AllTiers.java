@@ -1,4 +1,6 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.material;
+
+import com.hjmmd_8.bettergold.registry.AllItems;
 
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;

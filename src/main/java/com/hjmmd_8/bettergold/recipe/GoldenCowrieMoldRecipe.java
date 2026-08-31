@@ -1,4 +1,7 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.recipe;
+
+import com.hjmmd_8.bettergold.registry.AllItems;
+import com.hjmmd_8.bettergold.registry.AllRecipes;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;

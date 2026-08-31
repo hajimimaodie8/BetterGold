@@ -1,4 +1,7 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.material;
+
+import com.hjmmd_8.bettergold.bettergold;
+import com.hjmmd_8.bettergold.registry.AllItems;
 
 import net.minecraft.Util;
 import net.minecraft.core.Holder;

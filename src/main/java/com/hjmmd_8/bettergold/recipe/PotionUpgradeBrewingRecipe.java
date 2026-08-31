@@ -1,4 +1,4 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.recipe;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;

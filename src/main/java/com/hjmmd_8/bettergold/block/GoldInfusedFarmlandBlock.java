@@ -1,4 +1,4 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

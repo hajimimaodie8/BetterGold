@@ -1,4 +1,4 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.config;
 
 import java.util.List;
 import java.util.Set;
@@ -51,7 +51,7 @@ public class Config {
                     "可填 minecraft: 或 bettergold: 开头的任意金系物品注册名。")
             .defineListAllowEmpty("goldLootItems", List.of(), () -> "", Config::validateItemName);
 
-    static final ModConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec SPEC = BUILDER.build();
 
     private static boolean validateItemName(final Object obj) {
         return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));

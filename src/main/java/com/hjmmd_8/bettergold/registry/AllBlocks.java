@@ -1,4 +1,8 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.registry;
+
+import com.hjmmd_8.bettergold.bettergold;
+import com.hjmmd_8.bettergold.block.GoldCropBlock;
+import com.hjmmd_8.bettergold.block.GoldInfusedFarmlandBlock;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.BlockItem;
@@ -212,7 +216,7 @@ public class AllBlocks {
                     .sound(net.minecraft.world.level.block.SoundType.GRAVEL)
                     .randomTicks()));
 
-    /** 金胡萝卜作物：种子=万坚金胡萝卜（当种子种），成熟掉万坚金胡萝卜 */
+    /** 金胡萝卜作物：种子=普通金萝卜（原版），成熟掉普通金萝卜（原版） */
     public static final DeferredBlock<GoldCropBlock> GOLDEN_CARROT_CROP = BLOCKS.register("golden_carrot_crop",
             () -> new GoldCropBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.PLANT)
@@ -220,8 +224,8 @@ public class AllBlocks {
                     .randomTicks()
                     .instabreak()
                     .sound(net.minecraft.world.level.block.SoundType.CROP),
-                    () -> AllItems.STURDYGOLD_CARROT.get(),
-                    () -> AllItems.STURDYGOLD_CARROT.get()));
+                    () -> net.minecraft.world.item.Items.GOLDEN_CARROT,
+                    () -> net.minecraft.world.item.Items.GOLDEN_CARROT));
 
     /** 金钱茄作物：种子=金钱茄种子，成熟掉金钱茄 */
     public static final DeferredBlock<GoldCropBlock> GOLDEN_EGGPLANT_CROP = BLOCKS.register("golden_eggplant_crop",

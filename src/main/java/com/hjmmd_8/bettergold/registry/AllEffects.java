@@ -1,4 +1,6 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.registry;
+
+import com.hjmmd_8.bettergold.bettergold;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;

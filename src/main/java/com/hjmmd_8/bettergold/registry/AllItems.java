@@ -1,4 +1,11 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.registry;
+
+import com.hjmmd_8.bettergold.bettergold;
+import com.hjmmd_8.bettergold.block.GoldCropBlock;
+import com.hjmmd_8.bettergold.item.BowlFoodItem;
+import com.hjmmd_8.bettergold.item.DrinkItem;
+import com.hjmmd_8.bettergold.material.AllArmorMaterials;
+import com.hjmmd_8.bettergold.material.AllTiers;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
@@ -144,13 +151,12 @@ public class AllItems {
                     .effect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 7200, 0), 1.0F)
                     .build()));
 
-    /** 万坚金胡萝卜：12 饥饿 / 28.8 饱和度 + 16 分钟夜视（直接食用强化）；可种在金染耕地 */
-    public static final DeferredItem<Item> STURDYGOLD_CARROT = ITEMS.register("sturdygold_carrot",
-            () -> new SeedFoodItem(AllBlocks.GOLDEN_CARROT_CROP.get(),
-                    new Item.Properties().fireResistant().food(new FoodProperties.Builder()
-                            .nutrition(12).saturationModifier(2.4F).alwaysEdible()
-                            .effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 19200, 0), 1.0F)
-                            .build())));
+    /** 万坚金胡萝卜：12 饥饿 / 28.8 饱和度 + 16 分钟夜视（纯食物，不能种植；种植请用普通金萝卜） */
+    public static final DeferredItem<Item> STURDYGOLD_CARROT = ITEMS.registerSimpleItem("sturdygold_carrot",
+            new Item.Properties().fireResistant().food(new FoodProperties.Builder()
+                    .nutrition(12).saturationModifier(2.4F).alwaysEdible()
+                    .effect(new MobEffectInstance(MobEffects.NIGHT_VISION, 19200, 0), 1.0F)
+                    .build()));
 
     /** 万坚金巧克力棒：18 饥饿 / 14.4 饱和度 + 3 分钟抗寒性 */
     public static final DeferredItem<Item> STURDYGOLD_CHOCOLATE_BAR = ITEMS.registerSimpleItem("sturdygold_chocolate_bar",

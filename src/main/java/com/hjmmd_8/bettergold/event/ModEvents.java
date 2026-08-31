@@ -1,4 +1,10 @@
-package com.hjmmd_8.bettergold;
+package com.hjmmd_8.bettergold.event;
+
+import com.hjmmd_8.bettergold.block.GoldInfusedFarmlandBlock;
+import com.hjmmd_8.bettergold.config.Config;
+import com.hjmmd_8.bettergold.registry.AllBlocks;
+import com.hjmmd_8.bettergold.registry.AllEffects;
+import com.hjmmd_8.bettergold.registry.AllItems;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -347,6 +353,9 @@ public class ModEvents {
             BlockState cropState = AllBlocks.GOLDEN_CARROT_CROP.get().defaultBlockState();
             if (cropState.canSurvive(level, plantPos)) {
                 level.setBlock(plantPos, cropState, 3);
+                // 种植音效（原版种子种植音效）
+                level.playSound(null, plantPos, net.minecraft.sounds.SoundEvents.CROP_PLANTED,
+                        net.minecraft.sounds.SoundSource.BLOCKS, 1.0F, 1.0F);
                 if (!player.getAbilities().instabuild) {
                     held.shrink(1);
                 }
